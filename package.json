@@ -1,0 +1,23 @@
+{
+    "name": "microservices-monorepo",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "user-auth-microservice",
+        "task-management-microservice",
+        "task-manager-frontend"
+    ],
+    "scripts": {
+        "start:user-auth": "cd user-auth-microservice && node server.js",
+        "start:task-management": "cd task-management-microservice && node server.js",
+        "start:task-manager-frontend": "cd task-manager-frontend && npm start",
+        "start": "concurrently \"npm run start:user-auth\" \"npm run start:task-management\" \"npm run start:task-manager-frontend\""
+    },
+    "devDependencies": {
+        "concurrently": "^8.0.1"
+    },
+    "dependencies": {
+        "bootstrap": "^5.2.3",
+        "react-router-dom": "^6.10.0"
+    }
+}

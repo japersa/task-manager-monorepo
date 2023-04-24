@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  user-auth-microservice:
+    container_name: user-auth-microservice
+    build:
+      context: ./user-auth-microservice
+    ports:
+      - '3001:3001'
+    environment:
+      - PORT=3001
+      - MONGODB_URI=mongodb://mongo:27017/user_auth_db
+      - JWT_SECRET=mysecret
+
+  task-management-microservice:
+    container_name: task-management-microservice
+    build:
+      context: ./task-management-microservice
+    ports:
+      - '3002:3002'
+    environment:
+      - PORT=3002
+      - MONGODB_URI=mongodb://mongo:27017/task_management_db
+      - USER_API_URL=http://user-auth-microservice:3001/api/v1/auth
+
+  task-manager-frontend:
+    container_name: task-manager-frontend
+    build:
+      context: ./task-manager-frontend
+    ports:
+      - '8080:8080'
+    environment:
+      - REACT_APP_USER_API_URL=http://user-auth-microservice:3001/api/v1/auth
+      - REACT_APP_TASK_API_URL=http://task-management-microservice:3002/api/v1/auth
+
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - ./data:/data/db
+    ports:
+      - '27017:27017'
